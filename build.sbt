@@ -6,7 +6,7 @@ val buildNative = TaskKey[Unit]("buildNative", "Build native code")
 val buildNativeSettings = buildNative := {
 	val s: TaskStreams = streams.value
 	s.log.info("Building native code...")
-  val command = Seq("src/native/build.sh")
+  val command = Seq("src/native/build.sh", System.getProperty("java.home"))
 	if ((command !) == 0) {
 		s.log.success("Native build successful")
 	} else {
@@ -15,7 +15,7 @@ val buildNativeSettings = buildNative := {
 }
 
 lazy val root = (project in file("."))
-.enablePlugins(JniNative)
+//.enablePlugins(JniNative)
 .settings(
 	name := "JniScalaNimExample",
 	version := "0.1.0",
@@ -24,7 +24,16 @@ lazy val root = (project in file("."))
 
 	fork in run := true,
 	outputStrategy in run := Some(StdoutOutput),
+	javaOptions in run += "-Djava.library.path=src/native",
 
+  // add the task and make 'compile' depend on it
 	buildNativeSettings,
-	compile in Compile <<= (compile in Compile).dependsOn(buildNative)
+	compile in Compile <<= (compile in Compile).dependsOn(buildNative),
+
+	// native source to the watched sources
+	watchSources <++= baseDirectory map { path =>
+    ((path / "src/native") ** "*.c").get
+	},
+
+	target in javah := file("src/native")
 )
