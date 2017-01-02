@@ -2,21 +2,36 @@ package scalanim
 
 import ch.jodersky.jni.nativeLoader
 
-@nativeLoader("native")
-object NativeWrapper {
-  @native def plus(term: Int): Int
+@nativeLoader("nativecpp")
+object NativeWrapperCpp {
+
+  @native def addOne(term: Int): Int
+
 }
+
+
+@nativeLoader("nativenim")
+object NativeWrapperNim {
+
+  @native def addOne(term: Int): Int
+
+}
+
 
 object Main {
   
   def main(args: Array[String]) {
     // alternatively, instead of using @nativeLoader
-    // System.loadLibrary("native")
+    // System.loadLibrary("nativecpp")
+    // System.loadLibrary("nativenim")
     
     println("JNI/Scala/Nim Test")
     
-    val res = NativeWrapper.plus(1)
-    println("Result from JNI call: " + res)
+    val resCpp = NativeWrapperCpp.addOne(1)
+    println("Result from JNI call (C++): " + resCpp)
+
+    val resNim = NativeWrapperNim.addOne(1)
+    println("Result from JNI call (Nim): " + resNim)
   }
   
 }
