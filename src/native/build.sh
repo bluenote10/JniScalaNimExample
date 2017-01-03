@@ -20,5 +20,6 @@ gcc -shared -o libnativecpp.so scalanim_NativeWrapperCpp__.o
 # to control which JVM path jnim uses:
 export JAVA_HOME=${JDK_PATH}
 
-nim --verbosity:1 --app:lib -o:libnativenim.so c native.nim
+# nim --verbosity:1 --app:lib -o:libnativenim.so --debugger:native --debugger c native.nim
+nim --verbosity:1 --app:lib -o:libnativenim.so --threads:on c native.nim
 
