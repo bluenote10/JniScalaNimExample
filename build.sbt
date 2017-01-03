@@ -32,7 +32,7 @@ lazy val root = (project in file("."))
 
 	// native source to the watched sources
 	watchSources <++= baseDirectory map { path =>
-    ((path / "src/native") ** "*.c").get
+    ((path / "src/native") ** "*.nim").get
 	},
 
 	target in javah := file("src/native")
